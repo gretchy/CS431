@@ -1,6 +1,9 @@
 
 public class VirtualPgTable {
 	
-	// uses fixed-size arrays
+	int v, r, d, pgFrameNum; // variables for each table entry
+	
+	// table entry
+	int[] entry = new int[4];
 
 }
