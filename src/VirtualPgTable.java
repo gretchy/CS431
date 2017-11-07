@@ -1,18 +1,12 @@
 
 public class VirtualPgTable {
-	private String index, pageFrameNum;
+	private int pageFrameNum;
 	private int v, r, d;
 	
-	public String getIndex() {
-		return index;
-	}
-	public void setIndex(String index) {
-		this.index = index;
-	}
-	public String getPageFrameNum() {
+	public int getPageFrameNum() {
 		return pageFrameNum;
 	}
-	public void setPageFrameNum(String pageFrameNum) {
+	public void setPageFrameNum(int pageFrameNum) {
 		this.pageFrameNum = pageFrameNum;
 	}
 	public int getV() {

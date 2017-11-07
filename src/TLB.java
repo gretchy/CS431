@@ -1,18 +1,18 @@
 
 public class TLB {
-	private String virtualPageNum, pageFrameNum;
+	private int virtualPageNum, pageFrameNum;
 	private int v, r, d;
 	
-	public String getVirtualPageNum() {
+	public int getVirtualPageNum() {
 		return virtualPageNum;
 	}
-	public void setVirtualPageNum(String virtualPageNum) {
+	public void setVirtualPageNum(int virtualPageNum) {
 		this.virtualPageNum = virtualPageNum;
 	}
-	public String getPageFrameNum() {
+	public int getPageFrameNum() {
 		return pageFrameNum;
 	}
-	public void setPageFrameNum(String pageFrameNum) {
+	public void setPageFrameNum(int pageFrameNum) {
 		this.pageFrameNum = pageFrameNum;
 	}
 	public int getV() {
