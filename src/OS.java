@@ -2,14 +2,19 @@ import java.io.File;
 
 public class OS {
 
+	private CircularLinkedList clock = new CircularLinkedList();
+	private int clock_hand;
+	
 	public OS(double[][] pm) {
 		// initialize clock replacement stuff
+		for (int row = 0; row < 16; row++) {
+			clock.addNodeAtEnd(pm[row][0]);
+		}
+		
+		clock_hand = 0;
 	}
 	
-	public boolean handlePageFault(double[][] pm, File outputDir) {
-		// need to implement page replacement circular linked list first
-		//  ^ probs on creation of OS instance
-		
+	public boolean handlePageFault(double[][] pm, VirtualPgTable[] vpt, File outputDir) {		
 		// page table page frame number has all pages (2 hex) to get actual file
 		// return true if d bit was set on page evicted
 		return true;
