@@ -3,6 +3,13 @@ public class TLB {
 	private int virtualPageNum, pageFrameNum;
 	private int v, r, d;
 	
+	public TLB() {
+		this.v = 0;
+		this.r = 0;
+		this.d = 0;
+		this.virtualPageNum = -1;
+		this.pageFrameNum = -1;
+	}
 	public int getVirtualPageNum() {
 		return virtualPageNum;
 	}

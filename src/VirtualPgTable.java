@@ -3,6 +3,13 @@ public class VirtualPgTable {
 	private int pageFrameNum;
 	private int v, r, d;
 	
+	public VirtualPgTable(int i) {
+		this.pageFrameNum = i;
+		this.v = 0;
+		this.r = 0;
+		this.d = 0;
+	}
+	
 	public int getPageFrameNum() {
 		return pageFrameNum;
 	}
