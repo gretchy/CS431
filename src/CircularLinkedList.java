@@ -4,8 +4,14 @@ public class CircularLinkedList {
     public Node head = null;
     public Node tail = null;
 
-    public void addNodeAtEnd(double data){
+    public void addNodeAtEnd(int data){
     		Node n = new Node(data);
+    		if (size == 0) {
+    			head = n;
+    			tail = n;
+    			tail.next = n;
+    		}
+    		
     		tail.next = n;
     		tail=n;
     		tail.next = head;
@@ -30,9 +36,9 @@ public class CircularLinkedList {
 }
 
 class Node{
-    double data;
+    int data;
     Node next;
-    public Node(double pm){
+    public Node(int pm){
         this.data = pm;
     }
 }

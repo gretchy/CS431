@@ -53,7 +53,7 @@ public class CPU {
 		Scanner scan = new Scanner(input_file);
 		while (scan.hasNextLine()) {
 			int readOrWrite = scan.nextInt();
-			String va = scan.nextLine();
+			String va = scan.next();
 			double value = -1;
 			if (readOrWrite == 1) {
 				value = scan.nextDouble();
@@ -101,49 +101,46 @@ public class CPU {
 					tlb[i].setR(1);
 					
 					if (pm[tlb[i].getPageFrameNum()][offset] == -1) {
-						// trap to OS and do page replacement
-						// need to read correct page into pm (actual .pg file)
-						// ^ method needs to return a boolean for dbs set
+						dbs = os.handlePageFault(va, pm, vpt, outputDir);
 					} else {
 						value = pm[tlb[i].getPageFrameNum()][offset];
 					}
-				} else {
+				} else if (vpNum == tlb[i].getVirtualPageNum() && tlb[i].getD() == 1) {
+					softmiss = false;
+					hardmiss = false;
 					// page fault, entry is dirty
+					dbs = os.handlePageFault(va, pm, vpt, outputDir);
 				}
 			}
 			
 			if (softmiss) {
 				// check page table second
 				int pgFrameNum = vpt[vpNum].getPageFrameNum();
-				if (pgFrameNum != -1 && vpt[vpNum].getD() == 0) {
+				if (pgFrameNum < 16 && vpt[vpNum].getD() == 0) {
 					hardmiss = false;
 					vpt[vpNum].setR(1);
 					vpt[vpNum].setV(1);
 					
-					// is a softmiss so TLB needs to be updated
-					updateTLB(vpNum, pgFrameNum);
-					
 					if (pm[pgFrameNum][offset] == -1) {
 						// page fault
-						// again trap to OS and do page replacement
-						// need to read correct page into pm (actual .pg file)
-						// ^ method needs to return a boolean for dbs set
+						dbs = os.handlePageFault(va, pm, vpt, outputDir);
 					} else {
 						value = pm[pgFrameNum][offset];
+						// is a softmiss so TLB needs to be updated
+						updateTLB(vpNum, pgFrameNum);
 					}
 	
-				} else {
+				} else if (pgFrameNum < 16 && vpt[vpNum].getD() == 1) {
+					hardmiss = false;
 					// page fault, entry is dirty
+					dbs = os.handlePageFault(va, pm, vpt, outputDir);
 				}
 			}
 			
 			if (hardmiss) {
 				// page fault
-				// again trap to OS and do page replacement
-				// need to read correct page into pm (actual .pg file)
-				// ^ method needs to return a boolean for dbs set
+				dbs = os.handlePageFault(va, pm, vpt, outputDir);
 			}
-			
 			
 		} else if (readOrWrite == 1) {
 		// instruction is to write
@@ -158,8 +155,7 @@ public class CPU {
 					
 					if (pm[tlb[i].getPageFrameNum()][offset] == -1) {
 						// trap to OS and do page replacement
-						// need to read correct page into pm (actual .pg file)
-						// ^ method needs to return a boolean for dbs set
+						dbs = os.handlePageFault(va, pm, vpt, outputDir);
 					} else {
 						pm[tlb[i].getPageFrameNum()][offset] = value;
 					}
@@ -169,22 +165,19 @@ public class CPU {
 			if (softmiss) {
 				// check page table second
 				int pgFrameNum = vpt[vpNum].getPageFrameNum();
-				if (pgFrameNum != -1) {
+				if (pgFrameNum < 16) {
 					hardmiss = false;
 					vpt[vpNum].setR(1);
 					vpt[vpNum].setV(1);
 					vpt[vpNum].setD(1);
 					
-					// is a softmiss so TLB needs to be updated
-					updateTLB(vpNum, pgFrameNum);
-					
 					if (pm[pgFrameNum][offset] == -1) {
 						// page fault
-						// again trap to OS and do page replacement
-						// need to read correct page into pm (actual .pg file)
-						// ^ method needs to return a boolean for dbs set
+						dbs = os.handlePageFault(va, pm, vpt, outputDir);
 					} else {
 						pm[pgFrameNum][offset] = value;
+						// is a softmiss so TLB needs to be updated
+						updateTLB(vpNum, pgFrameNum);
 					}
 	
 				}
@@ -192,9 +185,7 @@ public class CPU {
 			
 			if (hardmiss) {
 				// page fault
-				// again trap to OS and do page replacement
-				// need to read correct page into pm (actual .pg file)
-				// ^ method needs to return a boolean for dbs set
+				dbs = os.handlePageFault(va, pm, vpt, outputDir);
 			}
 		} else {
 			System.out.println("Expecting a 0 or 1 from input file.");
@@ -285,7 +276,7 @@ public class CPU {
 			}
 		}
 		
-		os = new OS(pm);
+		os = new OS();
 	}
 	
 	public static File copyPageFiles() {
