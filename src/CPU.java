@@ -113,6 +113,7 @@ public class CPU {
 					
 					if (pm[tlb[i].getPageFrameNum()][offset] == -1) {
 						dbs = os.handlePageFault(va, pm, vpt, outputDir);
+						value = pm[vpt[vpNum].getPageFrameNum()][offset];
 					} else {
 						value = pm[tlb[i].getPageFrameNum()][offset];
 					}
@@ -121,6 +122,7 @@ public class CPU {
 					hardmiss = false;
 					// page fault, entry is dirty
 					dbs = os.handlePageFault(va, pm, vpt, outputDir);
+					value = pm[vpt[vpNum].getPageFrameNum()][offset];
 				}
 			}
 			
@@ -135,9 +137,10 @@ public class CPU {
 					if (pm[pgFrameNum][offset] == -1) {
 						// page fault
 						dbs = os.handlePageFault(va, pm, vpt, outputDir);
+						value = pm[vpt[vpNum].getPageFrameNum()][offset];
 					} else {
 						value = pm[pgFrameNum][offset];
-						// is a softmiss so TLB needs to be updated
+						// is a soft miss so TLB needs to be updated
 						updateTLB(vpNum, pgFrameNum);
 					}
 	
@@ -145,12 +148,14 @@ public class CPU {
 					hardmiss = false;
 					// page fault, entry is dirty
 					dbs = os.handlePageFault(va, pm, vpt, outputDir);
+					value = pm[vpt[vpNum].getPageFrameNum()][offset];
 				}
 			}
 			
 			if (hardmiss) {
 				// page fault
 				dbs = os.handlePageFault(va, pm, vpt, outputDir);
+				value = pm[vpt[vpNum].getPageFrameNum()][offset];
 			}
 			
 		} else if (readOrWrite == 1) {
@@ -167,6 +172,7 @@ public class CPU {
 					if (pm[tlb[i].getPageFrameNum()][offset] == -1) {
 						// trap to OS and do page replacement
 						dbs = os.handlePageFault(va, pm, vpt, outputDir);
+						pm[vpt[vpNum].getPageFrameNum()][offset] = value;
 					} else {
 						pm[tlb[i].getPageFrameNum()][offset] = value;
 					}
@@ -185,9 +191,10 @@ public class CPU {
 					if (pm[pgFrameNum][offset] == -1) {
 						// page fault
 						dbs = os.handlePageFault(va, pm, vpt, outputDir);
+						pm[vpt[vpNum].getPageFrameNum()][offset] = value;
 					} else {
 						pm[pgFrameNum][offset] = value;
-						// is a softmiss so TLB needs to be updated
+						// is a soft miss so TLB needs to be updated
 						updateTLB(vpNum, pgFrameNum);
 					}
 	
@@ -197,6 +204,7 @@ public class CPU {
 			if (hardmiss) {
 				// page fault
 				dbs = os.handlePageFault(va, pm, vpt, outputDir);
+				pm[vpt[vpNum].getPageFrameNum()][offset] = value;
 			}
 		} else {
 			System.out.println("Expecting a 0 or 1 from input file.");

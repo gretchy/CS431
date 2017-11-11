@@ -34,11 +34,11 @@ public class OS {
 						hex = "0" + hex;
 					}
 					File file = new File(outputDir + "/Page_Files/" + hex + ".pg");
-					PrintWriter pw = new PrintWriter(new FileWriter(file, true));
+					PrintWriter pw = new PrintWriter(new FileWriter(file));
 					
 					for (int i = 1; i < 256; i++) {
 						if (pm[clock_hand][i] != -1) {
-							pw.print(pm[clock_hand][i]);
+							pw.print(pm[clock_hand][i] + "\n");
 						}
 					}
 					dbs = true;
