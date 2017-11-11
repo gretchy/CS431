@@ -52,15 +52,26 @@ public class CPU {
 		
 		Scanner scan = new Scanner(input_file);
 		while (scan.hasNextLine()) {
-			int readOrWrite = scan.nextInt();
+			int readOrWrite = 0;
+			if (scan.hasNextInt()) {
+				readOrWrite = scan.nextInt();
+			} else {
+				System.out.println("Program is done.");
+				System.exit(0);
+			}
+			
 			String va = scan.next();
+			System.out.println(readOrWrite);
+			System.out.println(va);
 			double value = -1;
+			int row = 0;
 			if (readOrWrite == 1) {
 				value = scan.nextDouble();
+				row = 1;
 			}
 			
 			try {
-				MMU(readOrWrite, va, value, outputDir);
+				MMU(row, va, value, outputDir);
 				instruction_counter++;
 				
 				if (instruction_counter % 5 == 0) {
@@ -272,7 +283,11 @@ public class CPU {
 		pm = new double[16][256];
 		for (int row = 0; row < 16; row++) {
 			for (int col = 0; col < 256; col++) {
-				pm[row][col] = -1;
+				if (col == 0) {
+					pm[row][col] = row;
+				} else {
+				pm[row][col] = -1;			
+				}
 			}
 		}
 		
@@ -281,7 +296,7 @@ public class CPU {
 	
 	public static File copyPageFiles() {
 		String dst_location = System.getProperty("user.home") + "/cs431/Output";
-		int count = 0;
+		int count = 1;
 
 		File src = new File("bin/Page_Files");
 		File dst = new File(dst_location + count);

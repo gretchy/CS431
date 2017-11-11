@@ -50,11 +50,7 @@ public class OS {
 				File file = new File(outputDir + "/Page_Files/" + va.substring(0,2) + ".pg");
 				Scanner scan = new Scanner(file);
 				for (int i = 1; i < 256; i++ ) {
-					if (scan.next() == "") {
-						pm[clock_hand][i] = -1;
-					} else {
-						pm[clock_hand][i] = scan.nextDouble();
-					}
+					pm[clock_hand][i] = scan.nextDouble();
 				}
 				
 				vpt[vpNum].setPageFrameNum(clock_hand);
